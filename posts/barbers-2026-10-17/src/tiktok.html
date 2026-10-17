@@ -1,0 +1,37 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#2a1b10}
+#bg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,#33210f 0 120px,#2d1d0e 120px 124px),#2a1b10}
+#bg:after{content:"";position:absolute;inset:0;background:radial-gradient(90% 60% at 50% 45%,rgba(255,220,170,.10),rgba(0,0,0,.35))}
+#stage{position:absolute;left:0;top:285px;width:1080px;height:1350px}
+.card{position:absolute;inset:0;visibility:hidden}
+.card img{width:100%;height:100%;display:block}
+#eraser{position:absolute;top:-20px;width:110px;height:1390px;visibility:hidden;z-index:50}
+#eraser .wood{position:absolute;left:0;top:0;width:70px;height:100%;background:#8a5a32;border-radius:14px}
+#eraser .felt{position:absolute;left:58px;top:0;width:52px;height:100%;background:#3b3f44;border-radius:0 12px 12px 0}
+</style></head><body>
+<div id="bg"></div><div id="stage"><div id="eraser"><div class="wood"></div><div class="felt"></div></div></div>
+<script>
+const P=new URLSearchParams(location.search); const L=P.get('l')||'en';
+const DIR=L==='es'?'../../barbers-es-2026-10-17':'..';
+const DUR=L==='es'?[6.2,6.8,5.6,7.4,6.2,6.0]:[5.3,6.2,5.6,6.8,6.2,5.7];
+const ST=[];let a=0;for(const d of DUR){ST.push(a);a+=d} window.TOTAL=a; window.STARTS=ST;
+const W=0.5; // chalk-wipe length; the old card stays underneath, so no blank frame
+const stage=document.getElementById('stage'), er=document.getElementById('eraser');
+const cards=DUR.map((_,i)=>{const c=document.createElement('div');c.className='card';c.style.zIndex=i+1;c.innerHTML=`<img src="${DIR}/slide${i+1}.png">`;stage.appendChild(c);return c});
+const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2, clamp=x=>Math.max(0,Math.min(1,x));
+window.setT=function(t){
+  let wiping=false;
+  cards.forEach((c,i)=>{
+    const s=ST[i], e=i<DUR.length-1?ST[i+1]+W:1e9;
+    if(t<s||t>=e){c.style.visibility='hidden';return}
+    c.style.visibility='visible';
+    const u=t-s, hold=1+0.02*clamp(u/DUR[i]);
+    c.style.transform=`scale(${hold})`;
+    if(i>0&&u<W){const p=ease(clamp(u/W));c.style.clipPath=`inset(0 ${(1-p)*100}% 0 0)`;wiping=true;er.style.left=(p*1080-70)+'px'}
+    else c.style.clipPath='none';
+  });
+  er.style.visibility=wiping?'visible':'hidden';
+};
+Promise.all([...document.images].map(im=>im.decode())).then(()=>{setT(0);window.__ready=true});
+</script></body></html>

@@ -1,0 +1,82 @@
+[
+ {
+  "t": 0.0,
+  "fx": "thud",
+  "gain": 0.8
+ },
+ {
+  "t": 0.15,
+  "fx": "hit",
+  "gain": 0.5
+ },
+ {
+  "t": 6.18,
+  "fx": "swoosh_short",
+  "gain": 0.7
+ },
+ {
+  "t": 6.65,
+  "fx": "thud",
+  "gain": 0.6
+ },
+ {
+  "t": 12.98,
+  "fx": "swoosh_short",
+  "gain": 0.7
+ },
+ {
+  "t": 13.45,
+  "fx": "thud",
+  "gain": 0.6
+ },
+ {
+  "t": 14.0,
+  "fx": "pop",
+  "gain": 0.5
+ },
+ {
+  "t": 18.58,
+  "fx": "swoosh_short",
+  "gain": 0.7
+ },
+ {
+  "t": 19.05,
+  "fx": "thud",
+  "gain": 0.6
+ },
+ {
+  "t": 19.3,
+  "fx": "stamp",
+  "gain": 0.6
+ },
+ {
+  "t": 25.98,
+  "fx": "swoosh_short",
+  "gain": 0.7
+ },
+ {
+  "t": 26.45,
+  "fx": "thud",
+  "gain": 0.6
+ },
+ {
+  "t": 32.18,
+  "fx": "swoosh_short",
+  "gain": 0.7
+ },
+ {
+  "t": 32.65,
+  "fx": "thud",
+  "gain": 0.6
+ },
+ {
+  "t": 33.0,
+  "fx": "ding",
+  "gain": 0.6
+ },
+ {
+  "t": 37.0,
+  "fx": "pop_low",
+  "gain": 0.5
+ }
+]

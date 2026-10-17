@@ -1,0 +1,213 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&family=Oswald:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,800&display=block" rel="stylesheet">
+<style>
+:root{--chalk:#f3f1e9;--y:#ffe066;--slate:#1f2623;--wood:#7a4a26;--violet:#5b21e0;--ink:#15191a;--red:#c8202f;--blue:#1d3f9e}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#2b1c12;width:1080px;height:1350px;overflow:hidden}
+.slide{position:absolute;inset:0;width:1080px;height:1350px;overflow:hidden;display:none;background:#3a2617;color:var(--chalk);font-family:'Oswald',sans-serif}
+.slide.on{display:block}
+/* barber pole down the left edge */
+.pole{position:absolute;left:0;top:0;width:58px;height:1350px;z-index:3;border-right:5px solid #111;
+  background:repeating-linear-gradient(-35deg,var(--red) 0 34px,#f7f5f0 34px 60px,var(--blue) 60px 94px,#f7f5f0 94px 120px)}
+/* chalkboard */
+.board{position:absolute;left:76px;top:24px;width:986px;height:1176px;border:22px solid var(--wood);border-radius:8px;
+  background:radial-gradient(60% 40% at 30% 25%,#2c3632 0%,rgba(44,54,50,0) 70%),radial-gradient(50% 35% at 75% 70%,#29322e 0%,rgba(41,50,46,0) 70%),var(--slate);
+  box-shadow:inset 0 0 0 3px #5a3519, inset 0 0 60px rgba(0,0,0,.55)}
+.board:before{content:"";position:absolute;inset:0;opacity:.22;pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.6 -0.75'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+/* faint eraser smudge */
+.board:after{content:"";position:absolute;left:8%;top:62%;width:70%;height:16%;opacity:.07;transform:rotate(-4deg);pointer-events:none;
+  background:repeating-linear-gradient(170deg,#fff 0 6px,transparent 6px 22px);filter:blur(6px)}
+.wood{position:absolute;inset:0;pointer-events:none}
+/* chalk tray in the bottom 150px: decoration only */
+.tray{position:absolute;left:62px;right:4px;top:1206px;height:42px;background:#6b3f1f;border-radius:4px;box-shadow:0 10px 18px rgba(0,0,0,.45)}
+.stick{position:absolute;top:1188px;height:20px;border-radius:5px;background:#f3f1e9}
+.in{position:absolute;left:116px;top:66px;width:906px;height:1040px}
+.tag{position:absolute;top:1112px;left:120px;background:#fff;color:var(--violet);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;
+  font-size:30px;letter-spacing:.06em;padding:9px 18px 8px;border-radius:10px;z-index:20}
+.src{position:absolute;top:1112px;right:76px;background:rgba(243,241,233,.95);color:var(--ink);font-family:'Oswald',sans-serif;font-weight:700;
+  font-size:36px;letter-spacing:.02em;padding:2px 16px 0;border-radius:8px;white-space:nowrap;z-index:20;line-height:1.35}
+.sk{font-family:'Cabin Sketch',cursive;font-weight:700}
+.os{font-family:'Oswald',sans-serif;font-weight:700}
+.y{color:var(--y)}
+.fit .ln{white-space:nowrap;line-height:1.02}
+.fit .ln span{display:inline-block}
+.lab{font-size:78px;line-height:1;letter-spacing:.01em;text-transform:uppercase}
+.under{display:inline-block;border-bottom:8px solid var(--chalk);padding-bottom:6px}
+.chip{position:absolute;top:0;right:0;background:var(--y);color:var(--ink);font-size:44px;letter-spacing:.06em;padding:4px 20px 2px;border-radius:8px;line-height:1.25}
+.row{display:flex;align-items:center;gap:24px}
+.box{flex:none;width:92px;height:92px;border:8px solid var(--chalk);border-radius:6px;position:relative}
+.box:after{content:"";position:absolute;left:14px;top:-10px;width:26px;height:52px;border-right:10px solid var(--y);border-bottom:10px solid var(--y);transform:rotate(40deg);opacity:0}
+.item{font-size:86px;line-height:1.05}
+</style></head><body>
+<div id="root"></div>
+<script>
+const P=new URLSearchParams(location.search);
+const L=(P.get('l')||'en'), S=+(P.get('s')||1);
+const T={
+en:{src:'PEW RESEARCH CENTER · 2025',
+ s1:`<div class="os lab">BARBERS:</div>
+   <div class="fit" style="width:100%;margin-top:30px">
+    <div class="ln sk y" data-max="420"><span>28%</span></div>
+    <div class="ln sk" data-max="140" data-g="a"><span>OF HISPANIC ADULTS</span></div>
+    <div class="ln sk" data-g="a"><span>HAVE NO HOME</span></div>
+    <div class="ln sk" data-g="a"><span>INTERNET PLAN.</span></div>
+    <div class="ln os" data-max="130" style="margin-top:34px"><span class="under">JUST THEIR PHONE.</span></div>
+   </div>`,
+ s2:`<div class="fit" style="width:100%">
+    <div class="ln sk y" data-max="150"><span>“Phone only”:</span></div>
+    <div class="ln os" data-max="88" data-g="e" style="margin-top:12px"><span>a smartphone,</span></div>
+    <div class="ln os" data-g="e"><span>no home internet plan.</span></div></div>
+   <div id="bars" style="margin-top:56px"></div>`,
+ bars:[['All U.S. adults',16,false],['Hispanic adults',28,true]],
+ s3:`<div class="os lab y" style="font-size:80px">Here's the weird thing:</div>
+   <div class="fit" style="width:100%;margin-top:14px"><div class="ln sk" data-max="190"><span>it's going <span class="y under" style="border-color:var(--y)">UP.</span></span></div></div>
+   <div id="cols"></div>`,
+ s4:`<div class="os chip">EXAMPLE</div>
+   <div class="os lab y" style="font-size:80px">Imagine this:</div>
+   <div class="fit" style="width:100%;margin-top:26px">
+    <div class="ln sk" data-max="104" data-g="b"><span>a client wants a fade</span></div>
+    <div class="ln sk" data-g="b"><span>Saturday.</span></div>
+    <div class="ln sk" data-g="b" style="margin-top:22px"><span>Your booking link opens</span></div>
+    <div class="ln sk" data-g="b"><span>a tiny desktop page.</span></div>
+   </div>
+   <div class="row" style="margin-top:56px;gap:50px">
+    <div id="phone"></div>
+    <div class="fit" style="flex:1">
+     <div class="ln os y" data-max="148" data-g="c"><span>Pinch.</span></div>
+     <div class="ln os y" data-g="c"><span>Zoom.</span></div>
+     <div class="ln os" data-g="c"><span class="under">Gone.</span></div>
+    </div></div>`,
+ s5:`<div class="os lab y" style="font-size:80px">My take:</div>
+   <div class="fit" style="width:100%;margin-top:14px"><div class="ln sk" data-max="130"><span>check on <span class="under">YOUR</span> phone</span></div><div class="ln sk" data-max="130"><span>today:</span></div></div>
+   <div style="margin-top:80px;display:flex;flex-direction:column;gap:70px">
+    <div class="row"><div class="box"></div><div class="os item">book in 1 tap</div></div>
+    <div class="row"><div class="box"></div><div class="os item">prices readable<br>without zooming</div></div>
+    <div class="row"><div class="box"></div><div class="os item">a Spanish option</div></div>
+   </div>`,
+ s6:`<div class="os lab">BARBERS:</div>
+   <div class="fit" style="width:100%;margin-top:20px">
+    <div class="ln sk" data-max="150"><span>comment <span class="y" style="border:9px solid var(--y);border-radius:999px;padding:0 26px">CHECK.</span></span></div></div>
+   <div class="fit" style="width:100%;margin-top:44px">
+    <div class="ln os" data-max="118" data-g="d"><span>I'll check if clients</span></div>
+    <div class="ln os" data-g="d"><span>can book you from</span></div>
+    <div class="ln os" data-g="d"><span>their phone.</span></div></div>
+   <div class="sk y" style="font-size:330px;line-height:1;margin-top:20px">Free.</div>`},
+es:{src:'PEW RESEARCH CENTER · 2025',
+ s1:`<div class="os lab">BARBEROS:</div>
+   <div class="fit" style="width:100%;margin-top:24px">
+    <div class="ln sk y" data-max="330"><span>EL 28%</span></div>
+    <div class="ln sk" data-max="140" data-g="a"><span>DE LOS ADULTOS</span></div>
+    <div class="ln sk" data-g="a"><span>HISPANOS NO PAGA</span></div>
+    <div class="ln sk" data-g="a"><span>INTERNET EN CASA.</span></div>
+    <div class="ln os" data-max="130" style="margin-top:34px"><span class="under">SOLO SU CELULAR.</span></div>
+   </div>`,
+ s2:`<div class="fit" style="width:100%">
+    <div class="ln sk y" data-max="150"><span>“Solo celular”:</span></div>
+    <div class="ln os" data-max="88" data-g="e" style="margin-top:12px"><span>tienen celular, pero</span></div>
+    <div class="ln os" data-g="e"><span>no pagan internet en casa.</span></div></div>
+   <div id="bars" style="margin-top:56px"></div>`,
+ bars:[['Todos los adultos en EE.UU.',16,false],['Adultos hispanos',28,true]],
+ s3:`<div class="os lab y" style="font-size:80px">Lo curioso:</div>
+   <div class="fit" style="width:100%;margin-top:14px"><div class="ln sk" data-max="190"><span>va <span class="y under" style="border-color:var(--y)">SUBIENDO.</span></span></div></div>
+   <div id="cols"></div>`,
+ s4:`<div class="os chip">EJEMPLO</div>
+   <div class="os lab y" style="font-size:80px">Imagínate esto:</div>
+   <div class="fit" style="width:100%;margin-top:26px">
+    <div class="ln sk" data-max="104" data-g="b"><span>un cliente quiere un fade</span></div>
+    <div class="ln sk" data-g="b"><span>el sábado.</span></div>
+    <div class="ln sk" data-g="b" style="margin-top:22px"><span>Tu link abre una página</span></div>
+    <div class="ln sk" data-g="b"><span>chiquita de computadora.</span></div>
+   </div>
+   <div class="row" style="margin-top:56px;gap:50px">
+    <div id="phone"></div>
+    <div class="fit" style="flex:1">
+     <div class="ln os y" data-max="148" data-g="c"><span>Zoom.</span></div>
+     <div class="ln os y" data-g="c"><span>Zoom.</span></div>
+     <div class="ln os" data-g="c"><span class="under">Se fue.</span></div>
+    </div></div>`,
+ s5:`<div class="os lab y" style="font-size:80px">Mi consejo:</div>
+   <div class="fit" style="width:100%;margin-top:14px"><div class="ln sk" data-max="130"><span>revisa en <span class="under">TU</span> celular</span></div><div class="ln sk" data-max="130"><span>hoy:</span></div></div>
+   <div style="margin-top:80px;display:flex;flex-direction:column;gap:70px">
+    <div class="row"><div class="box"></div><div class="os item">agendar con 1 toque</div></div>
+    <div class="row"><div class="box"></div><div class="os item">precios sin hacer zoom</div></div>
+    <div class="row"><div class="box"></div><div class="os item">opción en español</div></div>
+   </div>`,
+ s6:`<div class="os lab">BARBEROS:</div>
+   <div class="fit" style="width:100%;margin-top:20px">
+    <div class="ln sk" data-max="150"><span>comenta <span class="y" style="border:9px solid var(--y);border-radius:999px;padding:0 26px">CHECK.</span></span></div></div>
+   <div class="fit" style="width:100%;margin-top:44px">
+    <div class="ln os" data-max="118" data-g="d"><span>Te digo si tus clientes</span></div>
+    <div class="ln os" data-g="d"><span>te pueden agendar</span></div>
+    <div class="ln os" data-g="d"><span>desde el celular.</span></div></div>
+   <div class="sk y" style="font-size:290px;line-height:1;margin-top:20px">Gratis.</div>`}
+}[L];
+
+const sl=document.createElement('section'); sl.className='slide on'; sl.id='s'+S;
+sl.innerHTML=`<div class="board"></div><div class="tray"></div>
+ <div class="stick" style="left:640px;width:120px"></div><div class="stick" style="left:800px;width:70px;background:#ffe9a8"></div>
+ <div class="pole"></div>
+ <div class="in">${T['s'+S]}</div>
+ ${S<=3?`<div class="src">${T.src}</div>`:''}
+ <div class="tag">OJEDA WORKS</div>`;
+document.getElementById('root').appendChild(sl);
+
+// slide 2: horizontal chalk bars, length proportional to the value (0-based)
+const bars=sl.querySelector('#bars');
+if(bars){ const MAXW=500; // px for 28%
+  bars.innerHTML=T.bars.map(([lab,v,hi])=>`
+   <div style="margin-bottom:60px">
+    <div class="os" style="font-size:76px;line-height:1.1">${lab}</div>
+    <div class="row" style="margin-top:12px;gap:26px">
+     <div style="flex:none;width:${Math.round(MAXW*v/28)}px;height:170px;border:8px solid ${hi?'var(--y)':'var(--chalk)'};border-radius:6px;
+       background:repeating-linear-gradient(-45deg,${hi?'rgba(255,224,102,.55)':'rgba(243,241,233,.4)'} 0 7px,transparent 7px 20px)"></div>
+     <div class="sk ${hi?'y':''}" style="font-size:160px;line-height:1">${v}%</div>
+    </div></div>`).join(''); }
+// slide 3: vertical bars 2023-2025, height proportional to the value (0-based)
+const cols=sl.querySelector('#cols');
+if(cols){ const H=470/28; const d=[[20,'2023'],[22,'2024'],[28,'2025']];
+  cols.style.cssText='position:absolute;left:0;right:0;bottom:30px;display:flex;justify-content:space-between;align-items:flex-end';
+  cols.innerHTML=d.map(([v,yr],i)=>`
+   ${i?`<svg width="70" height="60" viewBox="0 0 70 60" style="margin-bottom:${Math.round(v*H)-20}px"><path d="M4 30h48M36 10l22 20-22 20" stroke="#f3f1e9" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`:''}
+   <div style="display:flex;flex-direction:column;align-items:center;width:230px">
+    <div class="sk ${i==2?'y':''}" style="font-size:118px;line-height:1">${v}%</div>
+    <div style="width:170px;height:${Math.round(v*H)}px;margin-top:10px;border:8px solid ${i==2?'var(--y)':'var(--chalk)'};border-bottom:none;border-radius:6px 6px 0 0;
+      background:repeating-linear-gradient(-45deg,${i==2?'rgba(255,224,102,.55)':'rgba(243,241,233,.4)'} 0 7px,transparent 7px 20px)"></div>
+    <div style="width:230px;height:8px;background:var(--chalk)"></div>
+    <div class="os" style="font-size:62px;line-height:1.2;margin-top:6px">${yr}</div>
+   </div>`).join(''); }
+// slide 4: chalk phone showing a tiny desktop page
+const ph=sl.querySelector('#phone');
+if(ph){ ph.innerHTML=`<svg width="270" height="470" viewBox="0 0 230 400">
+  <rect x="8" y="8" width="214" height="384" rx="34" fill="none" stroke="#f3f1e9" stroke-width="10"/>
+  <rect x="88" y="26" width="54" height="10" rx="5" fill="#f3f1e9"/>
+  <g fill="#f3f1e9" opacity=".75">
+   <rect x="30" y="70" width="170" height="10"/><rect x="30" y="90" width="60" height="5"/><rect x="100" y="90" width="40" height="5"/><rect x="150" y="90" width="50" height="5"/>
+   <rect x="30" y="110" width="80" height="60" opacity=".5"/><rect x="120" y="110" width="80" height="4"/><rect x="120" y="120" width="70" height="4"/><rect x="120" y="130" width="76" height="4"/><rect x="120" y="140" width="60" height="4"/>
+   <rect x="30" y="185" width="50" height="4"/><rect x="88" y="185" width="50" height="4"/><rect x="146" y="185" width="54" height="4"/>
+   <rect x="30" y="195" width="46" height="4"/><rect x="88" y="195" width="44" height="4"/><rect x="146" y="195" width="50" height="4"/>
+   <rect x="30" y="215" width="170" height="3"/><rect x="30" y="224" width="150" height="3"/><rect x="30" y="233" width="160" height="3"/>
+   <rect x="150" y="250" width="50" height="12" rx="2"/>
+  </g>
+  <circle cx="115" cy="160" r="70" fill="none" stroke="#ffe066" stroke-width="7" stroke-dasharray="14 10"/>
+ </svg>`; }
+
+function fit(){
+  sl.querySelectorAll('.fit').forEach(f=>{
+    const W=f.clientWidth;
+    f.querySelectorAll('.ln').forEach(l=>{
+      l.style.fontSize='100px';
+      const w=l.querySelector('span').getBoundingClientRect().width;
+      l.style.fontSize=Math.min(+(l.dataset.max||200),Math.floor(100*W/w*0.98))+'px';
+    });
+    // groups share the smallest size (first line of a group carries data-max)
+    const g={}; f.querySelectorAll('.ln[data-g]').forEach(l=>{const k=l.dataset.g;g[k]=Math.min(g[k]||999,parseFloat(l.style.fontSize))});
+    f.querySelectorAll('.ln[data-g]').forEach(l=>l.style.fontSize=g[l.dataset.g]+'px');
+  });
+}
+document.fonts.ready.then(()=>{fit();window.__ready=true;});
+</script>
+</body></html>
