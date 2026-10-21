@@ -39,6 +39,7 @@ body.feed .sheet.on{visibility:visible}
 .src{font:500 36px/1.2 'IBM Plex Mono';letter-spacing:-.035em;margin-top:auto;padding-top:12px;border-top:3px solid var(--ink);color:var(--ink)}
 .src u{text-decoration:none;white-space:nowrap}
 .gap{height:22px;flex:none}
+.lang-es .big{line-height:1.12}
 .truthblk{margin-bottom:20px}
 /* slide 1 answer row */
 .row{display:flex;align-items:center;gap:28px;font-family:'Big Shoulders Display';font-weight:800;text-transform:uppercase;white-space:nowrap}
@@ -86,7 +87,7 @@ body.feed .sheet.on{visibility:visible}
 <script>
 const P=new URLSearchParams(location.search);
 const L=P.get('l')||'en', MODE=P.get('m')||'feed', S=+(P.get('s')||1);
-document.body.className=MODE;
+document.body.className=MODE+' lang-'+L;
 const SRC={en:"SOURCE: GOOGLE BUSINESS PROFILE HELP, 'HOW TO SET SPECIAL HOURS' · <u>support.google.com/business/answer/6303076</u>",
            es:"FUENTE: AYUDA DE GOOGLE BUSINESS PROFILE, 'HOW TO SET SPECIAL HOURS' · <u>support.google.com/business/answer/6303076</u>"};
 const CHK='<svg viewBox="0 0 118 118"><path pathLength="1" d="M14 64 C24 72 34 84 42 98 C58 64 80 34 108 8"/></svg>';
@@ -132,12 +133,12 @@ en:{
 es:{
  tags:[["ADMISIÓN"],["EJEMPLO"],["MITO","VERDAD"],["MITO","VERDAD"],["MITO","VERDAD"],["LISTA"],["GUÁRDALO"]],
  s:[
- `<div class="big fit" data-max="200" data-min="130">Urgent care:<br>la noche de Thanksgiving, los papás no saben si estás abierto.</div>
+ `<div class="big fit" data-max="200" data-min="120">Urgent care:<br>la noche de Thanksgiving, los papás no saben si estás abierto.</div>
   <div class="gap"></div>
   <div class="lbl">¿ABIERTO ESTA NOCHE?</div>
-  <div class="row fit" data-max="90" data-min="90" style="margin-top:10px"><span><i class="box"></i>SÍ</span><span><i class="box"></i>NO</span><span class="circ">QUIÉN SABE</span></div>`,
- `<div class="big fit" data-max="150" data-min="120">Imagínate esto: Thanksgiving, 8:05 PM. Una fiebre. Una mamá en el sillón escribe</div>
-  <div class="big fit field" data-max="120" data-min="90" style="align-self:flex-start">"Urgent care abierto ahora".</div>
+  <div class="row fit" data-max="90" data-min="68" style="margin-top:10px"><span><i class="box"></i>SÍ</span><span><i class="box"></i>NO</span><span class="circ">QUIÉN SABE</span></div>`,
+ `<div class="big fit" data-max="150" data-min="108">Imagínate esto: Thanksgiving, 8:05&nbsp;PM. Una fiebre. Una mamá en el sillón escribe</div>
+  <div class="big fit field" data-max="120" data-min="80" style="align-self:flex-start">"Urgent care abierto ahora".</div>
   <div class="small">Ejemplo inventado.</div>`,
  `<div class="lbl">MITO</div>
   <div class="big fit" data-max="150" data-min="120">"El horario está en la puerta."</div>
