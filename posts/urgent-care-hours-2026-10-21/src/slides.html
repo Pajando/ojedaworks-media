@@ -1,0 +1,241 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Kalam:wght@700&family=IBM+Plex+Mono:wght@500&display=block" rel="stylesheet">
+<style>
+:root{--mint:#d9efe6;--ink:#0f1420;--cream:#f2eee4;--red:#e63022;--yel:#ffd400;--violet:#5b21e0;--paper:#fdfdfa}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;overflow:hidden;background:var(--mint)}
+body.feed{height:1350px} body.tt{height:1920px}
+#bg{position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 45%,#e3f5ee 0%,var(--mint) 60%,#cfe7dd 100%)}
+#board{position:absolute;left:0;top:0;width:1080px;height:1350px}
+body.tt #board{top:250px}
+/* hardboard clipboard */
+.cb{position:absolute;left:24px;top:28px;width:1032px;height:1304px;border-radius:36px;
+  background:
+   repeating-linear-gradient(93deg,rgba(255,255,255,.035) 0 3px,rgba(0,0,0,.035) 3px 7px),
+   radial-gradient(70% 50% at 40% 30%,#9b6a3e 0%,#875a33 55%,#74492a 100%);
+  box-shadow:0 26px 50px rgba(15,20,32,.28),0 4px 10px rgba(15,20,32,.2),inset 0 0 0 2px rgba(0,0,0,.18)}
+.cb:after{content:"";position:absolute;inset:0;border-radius:36px;opacity:.25;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.012 .6' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .2 0 0 0 0 .1 0 0 0 0 .05 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+/* sheets */
+.sheets{z-index:10;position:absolute;left:48px;top:68px;width:984px;height:1246px}
+.sheet{position:absolute;inset:0;background:var(--paper);border-radius:4px;box-shadow:0 3px 8px rgba(0,0,0,.22);overflow:hidden;visibility:hidden}
+body.feed .sheet.on{visibility:visible}
+.sheet:before{content:"";position:absolute;inset:0;opacity:.35;pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .45 0 0 0 .18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.hdr{position:absolute;left:40px;right:40px;top:164px;height:46px;display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:5px solid var(--ink);padding-bottom:8px;color:var(--ink)}
+.hdr b{font:800 40px/1 'Big Shoulders Display';letter-spacing:.06em}
+.hdr i{font:500 30px/1 'IBM Plex Mono';font-style:normal}
+.content{position:absolute;left:40px;right:40px;top:224px;bottom:24px;display:flex;flex-direction:column;color:var(--ink)}
+.big{text-wrap:balance;font-family:'Big Shoulders Display';font-weight:900;line-height:1.0;text-transform:uppercase;letter-spacing:.005em}
+.q{font-family:'Big Shoulders Display';font-weight:700;line-height:1.08;border-left:10px solid var(--ink);padding:6px 0 6px 26px}
+.gloss{font-family:'Big Shoulders Display';font-weight:700;line-height:1.04;color:#3a4152;padding-left:36px;margin-top:6px}
+.lbl{font:500 34px/1.1 'IBM Plex Mono';letter-spacing:.04em;margin-bottom:12px;display:flex;align-items:center;gap:14px}
+.lbl:after{content:"";flex:1;border-bottom:3px dotted #8a8f99;transform:translateY(-6px)}
+.small{font:500 36px/1.2 'IBM Plex Mono';margin-top:14px}
+.src{font:500 36px/1.2 'IBM Plex Mono';letter-spacing:-.035em;margin-top:auto;padding-top:12px;border-top:3px solid var(--ink);color:var(--ink)}
+.src u{text-decoration:none;white-space:nowrap}
+.gap{height:22px;flex:none}
+.truthblk{margin-bottom:20px}
+/* slide 1 answer row */
+.row{display:flex;align-items:center;gap:28px;font-family:'Big Shoulders Display';font-weight:800;text-transform:uppercase;white-space:nowrap}
+.box{display:inline-block;width:.62em;height:.62em;border:6px solid var(--ink);margin-right:.18em;vertical-align:-.04em}
+.circ{position:relative;padding:0 .36em;margin-left:40px}
+.circ:before{content:"";position:absolute;left:-30px;right:-30px;top:-.2em;bottom:-.22em;border:7px solid var(--ink);border-radius:50%}
+.field{border:5px solid var(--ink);padding:.12em .3em .08em;display:inline-block;margin-top:14px;background:#fff}
+/* checklist */
+.ck{display:flex;align-items:flex-start;gap:26px;font-family:'Kalam';font-weight:700;line-height:1.06;margin-top:16px}
+.ck .bx{flex:none;width:60px;height:60px;border:6px solid var(--ink);position:relative;margin-top:2px}
+.ck svg{position:absolute;left:-12px;top:-30px;width:100px;height:100px;overflow:visible}
+.ck path{fill:none;stroke:var(--red);stroke-width:15;stroke-linecap:round;stroke-linejoin:round}
+.out{white-space:nowrap;display:flex;align-items:center;gap:18px;margin-top:22px;font-family:'Big Shoulders Display';font-weight:800;line-height:1}
+.out .arr{font-family:'IBM Plex Mono';font-weight:500}
+.stamp{font-weight:900;border:8px solid var(--ink);padding:.02em .16em 0;line-height:.95}
+.ow{margin-top:26px;align-self:flex-start;background:var(--violet);color:#fff;font:900 76px/1 'Big Shoulders Display';letter-spacing:.06em;padding:14px 26px 10px}
+/* steel clip */
+.clip{position:absolute;left:320px;top:4px;width:440px;height:96px;z-index:40}
+.clip .plate{position:absolute;left:0;right:0;top:18px;height:72px;border-radius:18px 18px 26px 26px;
+  background:linear-gradient(180deg,#f4f6f8 0%,#c9cfd6 30%,#9aa3ad 55%,#d8dde2 78%,#8d959f 100%);
+  box-shadow:0 10px 16px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.8),inset 0 -3px 0 rgba(0,0,0,.25)}
+.clip .lever{position:absolute;left:120px;right:120px;top:0;height:40px;border:12px solid #aeb6bf;border-bottom:none;border-radius:30px 30px 0 0;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.7)}
+.clip .rv{position:absolute;top:43px;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#7d858f 70%)}
+/* paper tag */
+.tagwrap{position:absolute;left:0;right:0;top:58px;height:160px;z-index:35;display:flex;justify-content:center;perspective:900px}
+.tag{display:flex;transform:rotate(-1.4deg);transform-origin:50% 0;box-shadow:0 8px 14px rgba(0,0,0,.28);border-radius:6px;overflow:hidden}
+.tag span{font:700 94px/1 'Kalam';padding:52px 32px 0;display:block;white-space:nowrap}
+.tag .ink{background:var(--ink);color:var(--cream)}
+.tag .myth{background:var(--red);color:var(--cream);-webkit-text-stroke:7px var(--ink);paint-order:stroke fill}
+.tag .truth{background:var(--yel);color:var(--ink)}
+.tag .myth+.truth{border-left:4px dashed rgba(15,20,32,.55)}
+.flipper{position:relative;transform-style:preserve-3d}
+.flipper .face{backface-visibility:hidden}
+.flipper .back{position:absolute;inset:0;transform:rotateX(180deg)}
+</style></head>
+<body>
+<div id="bg"></div>
+<div id="board">
+  <div class="cb"></div>
+  <div class="sheets" id="sheets"></div>
+  <div class="tagwrap" id="tagwrap"></div>
+  <div class="clip" id="clip"><div class="lever"></div><div class="plate"></div><div class="rv" style="left:60px"></div><div class="rv" style="right:60px"></div></div>
+</div>
+<script>
+const P=new URLSearchParams(location.search);
+const L=P.get('l')||'en', MODE=P.get('m')||'feed', S=+(P.get('s')||1);
+document.body.className=MODE;
+const SRC={en:"SOURCE: GOOGLE BUSINESS PROFILE HELP, 'HOW TO SET SPECIAL HOURS' · <u>support.google.com/business/answer/6303076</u>",
+           es:"FUENTE: AYUDA DE GOOGLE BUSINESS PROFILE, 'HOW TO SET SPECIAL HOURS' · <u>support.google.com/business/answer/6303076</u>"};
+const CHK='<svg viewBox="0 0 118 118"><path pathLength="1" d="M14 64 C24 72 34 84 42 98 C58 64 80 34 108 8"/></svg>';
+const T={
+en:{
+ tags:[["INTAKE"],["EXAMPLE"],["MYTH","TRUTH"],["MYTH","TRUTH"],["MYTH","TRUTH"],["CHECKLIST"],["SAVE"]],
+ s:[
+ `<div class="big fit" data-max="200" data-min="130">Urgent care:<br><span style="white-space:nowrap">on Thanksgiving</span> night, parents can't tell if you're open.</div>
+  <div class="gap"></div>
+  <div class="lbl">OPEN TONIGHT?</div>
+  <div class="row fit" data-max="90" data-min="90" style="margin-top:10px"><span><i class="box"></i>YES</span><span><i class="box"></i>NO</span><span class="circ">CAN'T TELL</span></div>`,
+ `<div class="big fit" data-max="150" data-min="120">Imagine this: Thanksgiving, 8:05 PM. A fever. A parent on the couch types</div>
+  <div class="big fit field" data-max="120" data-min="96" style="align-self:flex-start">"Urgent care open now."</div>
+  <div class="small">Made-up example.</div>`,
+ `<div class="lbl">MYTH</div>
+  <div class="big fit" data-max="150" data-min="120">"Our hours are on the door."</div>
+  <div class="gap"></div>
+  <div class="truthblk"><div class="lbl">TRUTH · MY TAKE</div>
+  <div class="big fit" data-max="150" data-min="120">At 8 PM they're not at your door. They're on their phone.</div>
+  <div class="small">My take.</div></div>`,
+ `<div class="lbl">MYTH</div>
+  <div class="big fit" data-max="140" data-min="120">"Holiday hours are the same. No need to set them."</div>
+  <div class="gap"></div>
+  <div class="truthblk"><div class="lbl">TRUTH · GOOGLE, WORD FOR WORD</div>
+  <div class="q fit" data-max="72" data-min="64">It's a good idea to confirm your hours for official holidays, even if they’re the same as your regular hours.</div></div>
+  <div class="src">${SRC.en}</div>`,
+ `<div class="lbl">MYTH</div>
+  <div class="big fit" data-max="140" data-min="120">"I added special hours, so they show."</div>
+  <div class="gap"></div>
+  <div class="truthblk"><div class="lbl">TRUTH · GOOGLE, WORD FOR WORD</div>
+  <div class="q fit" data-max="72" data-min="64">For special hours to show up on your Business Profile, set your business hours to “Open with main hours.”</div></div>
+  <div class="src">${SRC.en}</div>`,
+ `<div class="big fit" data-max="130" data-min="96">Before Thanksgiving (Thu&nbsp;Nov&nbsp;26):</div>
+  <div class="ck fit" data-max="62" data-min="50"><div class="bx">${CHK}</div><div>Hours set to "Open with main hours"</div></div>
+  <div class="ck fit" data-max="62" data-min="50"><div class="bx">${CHK}</div><div>Confirm every holiday, even if it's the same</div></div>
+  <div class="ck fit" data-max="62" data-min="50"><div class="bx">${CHK}</div><div>Check it on your own phone at 8&nbsp;PM.</div></div>
+  <div class="out fit" data-max="64" data-min="50"><span class="arr">→</span><span>A parent knows in one look:</span><span class="stamp" style="font-size:1.7em">OPEN.</span></div>
+  <div class="src">${SRC.en}</div>`,
+ `<div class="big fit" data-max="220" data-min="150">Save this<br>for the next<br>holiday.</div>
+  <div class="ow">OJEDA WORKS</div>
+  <div class="src">${SRC.en}</div>`
+ ]},
+es:{
+ tags:[["ADMISIÓN"],["EJEMPLO"],["MITO","VERDAD"],["MITO","VERDAD"],["MITO","VERDAD"],["LISTA"],["GUÁRDALO"]],
+ s:[
+ `<div class="big fit" data-max="200" data-min="130">Urgent care:<br>la noche de Thanksgiving, los papás no saben si estás abierto.</div>
+  <div class="gap"></div>
+  <div class="lbl">¿ABIERTO ESTA NOCHE?</div>
+  <div class="row fit" data-max="90" data-min="90" style="margin-top:10px"><span><i class="box"></i>SÍ</span><span><i class="box"></i>NO</span><span class="circ">QUIÉN SABE</span></div>`,
+ `<div class="big fit" data-max="150" data-min="120">Imagínate esto: Thanksgiving, 8:05 PM. Una fiebre. Una mamá en el sillón escribe</div>
+  <div class="big fit field" data-max="120" data-min="90" style="align-self:flex-start">"Urgent care abierto ahora".</div>
+  <div class="small">Ejemplo inventado.</div>`,
+ `<div class="lbl">MITO</div>
+  <div class="big fit" data-max="150" data-min="120">"El horario está en la puerta."</div>
+  <div class="gap"></div>
+  <div class="truthblk"><div class="lbl">VERDAD · MI OPINIÓN</div>
+  <div class="big fit" data-max="150" data-min="120">A las 8 PM no están en tu puerta. Están en su celular.</div>
+  <div class="small">Mi opinión.</div></div>`,
+ `<div class="lbl">MITO</div>
+  <div class="big fit" data-max="140" data-min="120" style="line-height:.9">"En días festivos abrimos igual. No hay que poner nada."</div>
+  <div style="height:6px"></div><div class="truthblk" style="margin-bottom:14px"><div class="lbl">VERDAD · GOOGLE, PALABRA POR PALABRA</div>
+  <div class="q fit" style="line-height:1.0" data-max="72" data-min="64">It's a good idea to confirm your hours for official holidays, even if they’re the same as your regular hours.</div>
+  <div class="gloss fit" data-max="54" data-min="46">(Conviene confirmar tu horario en días festivos, aunque sea el mismo de siempre.)</div></div>
+  <div class="src">${SRC.es}</div>`,
+ `<div class="lbl">MITO</div>
+  <div class="big fit" data-max="140" data-min="120">"Ya puse mi horario especial, así que sale."</div>
+  <div style="height:10px"></div><div class="truthblk"><div class="lbl">VERDAD · GOOGLE, PALABRA POR PALABRA</div>
+  <div class="q fit" data-max="72" data-min="64">For special hours to show up on your Business Profile, set your business hours to “Open with main hours.”</div>
+  <div class="gloss fit" data-max="54" data-min="46">(Para que salga tu horario especial, tu horario tiene que estar en "Open with main hours".)</div></div>
+  <div class="src">${SRC.es}</div>`,
+ `<div class="big fit" data-max="130" data-min="96">Antes de Thanksgiving (jue&nbsp;26&nbsp;de&nbsp;nov):</div>
+  <div class="ck fit" data-max="62" data-min="50"><div class="bx">${CHK}</div><div>Horario en "Open with main hours"</div></div>
+  <div class="ck fit" data-max="62" data-min="50"><div class="bx">${CHK}</div><div>Confirma cada día festivo, aunque sea igual</div></div>
+  <div class="ck fit" data-max="62" data-min="50"><div class="bx">${CHK}</div><div>Revísalo en tu propio celular a las 8&nbsp;PM.</div></div>
+  <div class="out fit" data-max="52" data-min="44"><span class="arr">→</span><span>La mamá sabe de un vistazo:</span><span class="stamp" style="font-size:1.6em">ABIERTO.</span></div>
+  <div class="src">${SRC.es}</div>`,
+ `<div class="big fit" data-max="220" data-min="140">Guárdalo<br>para el próximo<br>día festivo.</div>
+  <div class="ow">OJEDA WORKS</div>
+  <div class="src">${SRC.es}</div>`
+ ]}
+}[L];
+
+const sheetsEl=document.getElementById('sheets'), tagwrap=document.getElementById('tagwrap');
+const sheets=T.s.map((h,i)=>{const d=document.createElement('div');d.className='sheet';d.style.zIndex=20-i;
+  d.innerHTML=`<div class="hdr"><b>PATIENT INTAKE / ADMISIÓN</b><i>${i+1}/7</i></div><div class="content">${h}</div>`;sheetsEl.appendChild(d);return d});
+
+function tagHTML(i,state){ // state: 'split' | 'flip'
+  const t=T.tags[i];
+  if(t.length===1) return `<div class="tag"><span class="ink">${t[0]}</span></div>`;
+  if(state==='split') return `<div class="tag"><span class="myth">${t[0]}</span><span class="truth">${t[1]}</span></div>`;
+  return `<div class="tag"><span class="myth">${t[0]}</span><span class="truth" style="display:none">${t[1]}</span></div>`;
+}
+
+function fitSheet(sh){
+  const c=sh.querySelector('.content'), els=[...c.querySelectorAll('.fit')];
+  els.forEach(e=>e.style.fontSize=e.dataset.max+'px');
+  const over=()=>c.scrollHeight>c.clientHeight+4||els.some(e=>e.scrollWidth>e.clientWidth+1);
+  let k=1;
+  while(over()&&k>0.3){k-=0.01;els.forEach(e=>e.style.fontSize=Math.max(+e.dataset.min,Math.round(+e.dataset.max*k))+'px');
+    if(els.every(e=>parseInt(e.style.fontSize)==+e.dataset.min))break;}
+  return {overflow:over(),sizes:els.map(e=>parseInt(e.style.fontSize)+':'+e.textContent.trim().slice(0,22))};
+}
+window.REPORT=[];
+
+document.fonts.ready.then(()=>{
+  // fit each sheet while visible
+  sheets.forEach(sh=>{sh.style.visibility='visible';REPORT.push(fitSheet(sh));sh.style.visibility='';});
+  if(MODE==='feed'){
+    sheets[S-1].classList.add('on'); tagwrap.innerHTML=tagHTML(S-1,'split');
+    window.__ready=true; return;
+  }
+  // ---------- video timeline ----------
+  const DUR=L==='es'?[3.0,4.8,4.0,6.3,6.3,6.8,2.5]:[3.0,4.0,4.0,5.5,5.5,6.0,2.5];
+  const END=5.2, TEAR=0.3, FLIP=0.3, FLIPAT=[0,0,1.5,1.6,1.6,0,0], CKAT=[1.2,2.0,2.8], CKD=0.4;
+  const ST=[];let a=0;for(const d of DUR){ST.push(a);a+=d}
+  window.TOTAL=+(a+END).toFixed(2); window.STARTS=ST;
+  window.EVENTS={flips:[2,3,4].map(i=>ST[i]+FLIPAT[i]),checks:CKAT.map(x=>ST[5]+x),tears:ST.slice(1),endtag:a};
+  const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2, cl=x=>Math.max(0,Math.min(1,x));
+  let curTag=-1;
+  window.setT=function(t){
+    // which slide is "current" (tag + base sheet)
+    let cur=0;for(let i=0;i<ST.length;i++) if(t>=ST[i]) cur=i;
+    sheets.forEach((sh,i)=>{
+      let vis=false, tf='none', clip='none';
+      if(i===cur) vis=true;
+      if(i===cur-1 && t-ST[cur]<TEAR){ // previous sheet tearing off upward, on top
+        vis=true; const p=ease(cl((t-ST[cur])/TEAR));
+        tf=`translateY(${-p*1450}px) rotate(${-p*4}deg)`; sh.style.zIndex=30;
+        clip='polygon(0 0,100% 0,100% 99%,96% 100%,92% 99%,88% 100%,84% 98.8%,80% 100%,76% 99%,72% 100%,68% 98.9%,64% 100%,60% 99%,56% 100%,52% 98.8%,48% 100%,44% 99%,40% 100%,36% 98.9%,32% 100%,28% 99%,24% 100%,20% 98.8%,16% 100%,12% 99%,8% 100%,4% 98.9%,0 100%)';
+      } else sh.style.zIndex=20-i;
+      sh.style.visibility=vis?'visible':'hidden'; sh.style.transform=tf; sh.style.clipPath=clip;
+    });
+    // tag
+    if(curTag!==cur){tagwrap.innerHTML=tagHTML(cur,'flip');curTag=cur;}
+    const tg=tagwrap.firstElementChild, u=t-ST[cur];
+    let swing=0; if(u<0.6 && cur>0) swing=Math.sin(u/0.6*Math.PI*2)*5*(1-u/0.6);
+    if(cur===0 && u<0.25) swing=-3*(1-u/0.25);
+    let sy=1; if(FLIPAT[cur]){const p=ease(cl((u-FLIPAT[cur])/FLIP)); const m=tg.children[0], tr=tg.children[1];
+      if(p<.5){m.style.display='block';tr.style.display='none';sy=1-2*p}else{m.style.display='none';tr.style.display='block';sy=2*p-1}}
+    tg.style.transform=`rotate(${-1.4+swing}deg) scaleY(${Math.max(sy,0.02)})`;
+    // clip clack at start
+    document.getElementById('clip').style.transform=(t<0.12)?`translateY(${-6*(1-t/0.12)}px)`:'none';
+    // truth block reveal on myth slides
+    sheets.forEach((sh,i)=>{const tb=sh.querySelector('.truthblk'); if(!tb)return;
+      const lt=t-ST[i]; tb.style.opacity=(i<cur)?1:cl((lt-FLIPAT[i]-0.1)/0.3);});
+    // slide-6 checks
+    sheets[5].querySelectorAll('.ck path').forEach((p,k)=>{
+      const lt=t-ST[5]; const pr=(cur>5)?1:cl((lt-CKAT[k])/CKD); p.style.strokeDasharray='1'; p.style.strokeDashoffset=String(1-pr);});
+  };
+  setT(0); window.__ready=true;
+});
+</script></body></html>
