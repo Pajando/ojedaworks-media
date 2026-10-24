@@ -24,9 +24,9 @@ SHOTS = [
     (B(9),  'clip',  'flow/t2.mp4', 5.0),
     (B(10), 'still', 'styled/s4.png', None),   # blueprint
     (B(12), 'clip',  'flow/t2.mp4', 6.6),
-    (B(14), 'clip',  'flow/t1.mp4', 1.8),      # turns to camera
-    (B(15), 'still', 'styled/s5.png', None),   # halftone
-    (B(17), 'clip',  'flow/t1.mp4', 2.8),      # t1 3.9-6.6 has the logo on the lid: never used
+    (B(14), 'clip',  'flow/t1.mp4', 0.6),      # typing, head down
+    (B(15), 'still', 'styled/s5b.png', None),  # halftone made locally from t1 at 2.5s (AI s5 had a grin + melted hand)
+    (B(17), 'clip',  'flow/t1.mp4', 1.9),      # looks up to camera; smile starts ~3.2s, logo from ~4.5s
     (B(18), 'still', 'styled/s6.png', None),   # point cloud
     (B(20), 'clip',  'flow/t1.mp4', 6.62),
     (TOTAL, 'end',   'styled/s6.png', None),
